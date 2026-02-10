@@ -25,7 +25,7 @@ COPY --from=builder /root/.local /home/appuser/.local
 
 # Copy application code
 COPY app/ ./app/
-COPY static/ ./static/
+#COPY static/ ./static/
 
 # Fix ownership
 RUN chown -R appuser:appuser /app /home/appuser/.local
