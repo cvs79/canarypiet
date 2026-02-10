@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  canarypiet:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cvs79/canarypiet:latest
+    container_name: canarypiet
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - LOG_LEVEL=INFO
+      - REFRESH_INTERVAL=30
+      # Add custom environment variables for testing
+      - ENVIRONMENT=local
+      - DEPLOYMENT_TYPE=docker-compose
+      - CUSTOM_VAR_1=test-value-1
+      - CUSTOM_VAR_2=test-value-2
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped

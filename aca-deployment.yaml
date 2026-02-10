@@ -1,0 +1,117 @@
+# Azure Container Apps Deployment Configuration
+# 
+# Deploy using Azure CLI:
+# az containerapp create --resource-group <rg-name> --environment <env-name> --yaml aca-deployment.yaml
+
+properties:
+  managedEnvironmentId: /subscriptions/<subscription-id>/resourceGroups/<rg-name>/providers/Microsoft.App/managedEnvironments/<env-name>
+  configuration:
+    ingress:
+      external: true
+      targetPort: 8080
+      transport: http
+      allowInsecure: false
+      traffic:
+      - weight: 100
+        latestRevision: true
+    secrets: []
+    activeRevisionsMode: Single
+    maxInactiveRevisions: 10
+  template:
+    containers:
+    - name: canarypiet
+      image: cvs79/canarypiet:latest
+      env:
+      - name: PORT
+        value: "8080"
+      - name: LOG_LEVEL
+        value: "INFO"
+      - name: REFRESH_INTERVAL
+        value: "30"
+      - name: ENVIRONMENT
+        value: "azure"
+      - name: DEPLOYMENT_TYPE
+        value: "azure-container-apps"
+      resources:
+        cpu: 0.5
+        memory: 1Gi
+      probes:
+      - type: Liveness
+        httpGet:
+          path: /health
+          port: 8080
+        initialDelaySeconds: 10
+        periodSeconds: 30
+        timeoutSeconds: 3
+        failureThreshold: 3
+      - type: Readiness
+        httpGet:
+          path: /ready
+          port: 8080
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        timeoutSeconds: 3
+        failureThreshold: 3
+    scale:
+      minReplicas: 1
+      maxReplicas: 10
+      rules:
+      - name: http-scaling-rule
+        http:
+          metadata:
+            concurrentRequests: "50"
+---
+# Alternative: Deploy using Azure CLI commands
+
+# 1. Create resource group
+# az group create --name rg-canarypiet --location eastus
+
+# 2. Create Container Apps environment
+# az containerapp env create \
+#   --name canarypiet-env \
+#   --resource-group rg-canarypiet \
+#   --location eastus
+
+# 3. Create the container app
+# az containerapp create \
+#   --name canarypiet \
+#   --resource-group rg-canarypiet \
+#   --environment canarypiet-env \
+#   --image cvs79/canarypiet:latest \
+#   --target-port 8080 \
+#   --ingress external \
+#   --env-vars \
+#     PORT=8080 \
+#     LOG_LEVEL=INFO \
+#     REFRESH_INTERVAL=30 \
+#     ENVIRONMENT=azure \
+#     DEPLOYMENT_TYPE=azure-container-apps \
+#   --cpu 0.5 \
+#   --memory 1.0Gi \
+#   --min-replicas 1 \
+#   --max-replicas 10
+
+# 4. Get the application URL
+# az containerapp show \
+#   --name canarypiet \
+#   --resource-group rg-canarypiet \
+#   --query properties.configuration.ingress.fqdn \
+#   --output tsv
+
+# 5. Update the container app
+# az containerapp update \
+#   --name canarypiet \
+#   --resource-group rg-canarypiet \
+#   --image cvs79/canarypiet:latest
+
+# 6. View logs
+# az containerapp logs show \
+#   --name canarypiet \
+#   --resource-group rg-canarypiet \
+#   --follow
+
+# 7. Delete the app
+# az containerapp delete \
+#   --name canarypiet \
+#   --resource-group rg-canarypiet \
+#   --yes
