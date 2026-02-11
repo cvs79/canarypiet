@@ -1,0 +1,15 @@
+node_modules/
+.astro/
+dist/
+.git/
+.github/
+.vscode/
+*.md
+.env*
+npm-debug.log*
+.DS_Store
+app/
+requirements.txt
+static/
+*.pyc
+__pycache__/

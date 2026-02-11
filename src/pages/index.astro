@@ -1,0 +1,18 @@
+---
+import '@/styles/globals.css';
+import { Dashboard } from '@/components/Dashboard';
+
+const refreshInterval = parseInt(process.env.REFRESH_INTERVAL || '30');
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canary Piet - Environment Info</title>
+</head>
+<body>
+  <Dashboard client:only="react" refreshInterval={refreshInterval} />
+</body>
+</html>
