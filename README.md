@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="images/piet.png" alt="Canary Piet Logo" width="200"/>
+</div>
+
 # Canary Piet
 
 A lightweight web application for displaying environment and system information. Perfect for testing deployments to Azure Kubernetes Service (AKS), Azure Container Apps (ACA), or local Docker environments.
@@ -94,7 +98,7 @@ docker buildx create --use --name multiarch-builder
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
   --tag cvs79/canarypiet:latest \
-  --tag cvs79/canarypiet:2.0.0 \
+  --tag cvs79/canarypiet:3.0.0 \
   --push \
   .
 ```
