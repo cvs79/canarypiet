@@ -79,13 +79,20 @@ export function Dashboard({ refreshInterval }: DashboardProps) {
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-            <div>
-              <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-2">
-                Canary Piet
-              </h1>
-              <p className="text-muted-foreground text-sm">
-                Environment Information Dashboard
-              </p>
+            <div className="flex items-center gap-3">
+              <img 
+                src="/logo.png" 
+                alt="Canary Piet Logo" 
+                className="w-12 h-12 rounded-lg shadow-sm dark:shadow-md dark:ring-1 dark:ring-white/10"
+              />
+              <div>
+                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-2">
+                  Canary Piet
+                </h1>
+                <p className="text-muted-foreground text-sm">
+                  Environment Information Dashboard
+                </p>
+              </div>
             </div>
             <div className="flex gap-2">
               <ThemeToggle />
